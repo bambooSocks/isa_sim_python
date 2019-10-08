@@ -85,8 +85,8 @@ class DataMemory:
             with open(sys.argv[3], 'r') as fd:
                 file_content = fd.readlines()
         except:
-             print('Failed to open data memory file. Terminating execution.')
-             sys.exit(-1)
+            print('Failed to open data memory file. Terminating execution.')
+            sys.exit(-1)
         file_content = ''.join(file_content)
         file_content = re.sub(r'#.*?\n', ' ', file_content)
         file_content = re.sub(r'#.*? ', ' ', file_content)
@@ -175,8 +175,8 @@ class InstructionMemory:
             with open(sys.argv[2], 'r') as fd:
                 file_content = fd.readlines()
         except:
-             print('Failed to open program file. Terminating execution.')
-             sys.exit(-1)
+            print('Failed to open program file. Terminating execution.')
+            sys.exit(-1)
         file_content = ''.join(file_content)
         file_content = re.sub(r'#.*?\n', '', file_content)
         file_content = re.sub(r'#.*? ', '', file_content)
@@ -310,6 +310,9 @@ dataMemory = DataMemory()
 instructionMemory = InstructionMemory()
 
 print('\n---Start of simulation---')
+
+
+
 
 ####################################
 ##      Write your code here      ##
