@@ -85,8 +85,8 @@ class DataMemory:
             with open(sys.argv[3], 'r') as fd:
                 file_content = fd.readlines()
         except:
-            print('Failed to open data memory file. Terminating execution.')
-            sys.exit(-1)
+             print('Failed to open data memory file. Terminating execution.')
+             sys.exit(-1)
         file_content = ''.join(file_content)
         file_content = re.sub(r'#.*?\n', ' ', file_content)
         file_content = re.sub(r'#.*? ', ' ', file_content)
@@ -101,8 +101,8 @@ class DataMemory:
             for entry in file_content_list:
                 address, data = entry.split(':')
                 self.write_data(int(address), int(data))
-        except Exception as e:
-            print('Malformed data memory file. Terminating execution: {} - {}'.format(type(e), e))
+        except:
+            print('Malformed data memory file. Terminating execution.')
             sys.exit(-1)
         print('Data memory initialized.')
 
@@ -175,8 +175,8 @@ class InstructionMemory:
             with open(sys.argv[2], 'r') as fd:
                 file_content = fd.readlines()
         except:
-            print('Failed to open program file. Terminating execution.')
-            sys.exit(-1)
+             print('Failed to open program file. Terminating execution.')
+             sys.exit(-1)
         file_content = ''.join(file_content)
         file_content = re.sub(r'#.*?\n', '', file_content)
         file_content = re.sub(r'#.*? ', '', file_content)
@@ -190,29 +190,26 @@ class InstructionMemory:
         file_content = file_content.replace(' ;', ';')
         file_content = file_content.strip()
         file_content = file_content.replace(' ', ',')
-        self.file_content_list = file_content.split(';')
+        file_content_list = file_content.split(';')
         file_content = None
-
-    def read_register(self, register):
-        if register in self.registers:
-            while '' in self.file_content_list:
-                self.file_content_list.remove('')
-            try:
-                for entry in self.file_content_list:
-                    address, instruction_string = entry.split(':')
-                    instruction = instruction_string.split(',')
-                    if len(instruction)<1 or len(instruction)>4:
-                        raise Exception('Malformed program.')
-                    self.instruction_memory[int(address)] = {'opcode': str(instruction[0]), 'op_1':'-','op_2':'-','op_3':'-' }
-                    if len(instruction)>1:
-                        self.instruction_memory[int(address)]['op_1'] = str(instruction[1])
-                    if len(instruction)>2:
-                        self.instruction_memory[int(address)]['op_2'] = str(instruction[2])
-                    if len(instruction)>3:
-                        self.instruction_memory[int(address)]['op_3'] = str(instruction[3])
-            except:
-                print('Malformed program memory file. Terminating execution.')
-                sys.exit(-1)
+        while '' in file_content_list:
+            file_content_list.remove('')
+        try:
+            for entry in file_content_list:
+                address, instruction_string = entry.split(':')
+                instruction = instruction_string.split(',')
+                if len(instruction)<1 or len(instruction)>4:
+                    raise Exception('Malformed program.')
+                self.instruction_memory[int(address)] = {'opcode': str(instruction[0]), 'op_1':'-','op_2':'-','op_3':'-' }
+                if len(instruction)>1:
+                    self.instruction_memory[int(address)]['op_1'] = str(instruction[1])
+                if len(instruction)>2:
+                    self.instruction_memory[int(address)]['op_2'] = str(instruction[2])
+                if len(instruction)>3:
+                    self.instruction_memory[int(address)]['op_3'] = str(instruction[3])
+        except:
+            print('Malformed program memory file. Terminating execution.')
+            sys.exit(-1)
         print('Instruction memory initialized.')
 
     '''
@@ -301,16 +298,39 @@ class InstructionMemory:
                 print('Address ' + str(address) + ' = ', end='')
                 self.print_instruction(address)
 
-
 current_cycle = 0
-program_counter = 0
+pc = 0      # program counter
 
-registerFile = RegisterFile()
-dataMemory = DataMemory()
-instructionMemory = InstructionMemory()
+rf = RegisterFile()
+dm = DataMemory()
+im = InstructionMemory()
 
 print('\n---Start of simulation---')
 
+while current_cycle < max_cycles:
+    # fetch instruction
+    # decode instruction
+    current_opcode = im.read_opcode(pc)
+    if current_opcode == "ADD":
+        # rd = rs1 + rs2
+        # access memory (load)
+        rs1 = rf.read_register(im.read_operand_2(pc))
+        rs2 = rf.read_register(im.read_operand_3(pc))
+        # execute instruction
+        result = rs1 + rs2
+        # access memory (store)
+        rf.write_register(im.read_operand_1(pc), result)
+    if current_opcode == "SUB":
+        # rd = rs1 - rs2
+        pass
+
+
+
+
+
+
+    pc += 1
+    current_cycle += 1
 
 
 
