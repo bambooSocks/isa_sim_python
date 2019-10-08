@@ -1,7 +1,7 @@
 import sys
 import re
 
-print("\nWelcome to the ISA simulator! - Designed by <YOUR NAMES HERE>")
+print("\nWelcome to the ISA simulator! - Designed by Mihaela-Elena Nistor, Matej Majtan, Cliff Arndold Rhodes III")
 
 if len(sys.argv) < 4:
     print('Too few arguments.')
@@ -195,24 +195,24 @@ class InstructionMemory:
 
     def read_register(self, register):
         if register in self.registers:
-        while '' in self.file_content_list:
-            self.file_content_list.remove('')
-        try:
-            for entry in self.file_content_list:
-                address, instruction_string = entry.split(':')
-                instruction = instruction_string.split(',')
-                if len(instruction)<1 or len(instruction)>4:
-                    raise Exception('Malformed program.')
-                self.instruction_memory[int(address)] = {'opcode': str(instruction[0]), 'op_1':'-','op_2':'-','op_3':'-' }
-                if len(instruction)>1:
-                    self.instruction_memory[int(address)]['op_1'] = str(instruction[1])
-                if len(instruction)>2:
-                    self.instruction_memory[int(address)]['op_2'] = str(instruction[2])
-                if len(instruction)>3:
-                    self.instruction_memory[int(address)]['op_3'] = str(instruction[3])
-        except:
-            print('Malformed program memory file. Terminating execution.')
-            sys.exit(-1)
+            while '' in self.file_content_list:
+                self.file_content_list.remove('')
+            try:
+                for entry in self.file_content_list:
+                    address, instruction_string = entry.split(':')
+                    instruction = instruction_string.split(',')
+                    if len(instruction)<1 or len(instruction)>4:
+                        raise Exception('Malformed program.')
+                    self.instruction_memory[int(address)] = {'opcode': str(instruction[0]), 'op_1':'-','op_2':'-','op_3':'-' }
+                    if len(instruction)>1:
+                        self.instruction_memory[int(address)]['op_1'] = str(instruction[1])
+                    if len(instruction)>2:
+                        self.instruction_memory[int(address)]['op_2'] = str(instruction[2])
+                    if len(instruction)>3:
+                        self.instruction_memory[int(address)]['op_3'] = str(instruction[3])
+            except:
+                print('Malformed program memory file. Terminating execution.')
+                sys.exit(-1)
         print('Instruction memory initialized.')
 
     '''
