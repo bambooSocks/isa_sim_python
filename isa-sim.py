@@ -6,7 +6,7 @@ print("\nWelcome to the ISA simulator! - Designed by <YOUR NAMES HERE>")
 if len(sys.argv) < 4:
     print('Too few arguments.')
     sys.exit(-1)
-elif (len(sys.argv) > 4):
+elif len(sys.argv) > 4:
     print('Too many arguments.')
     sys.exit(-1)
 
@@ -101,8 +101,8 @@ class DataMemory:
             for entry in file_content_list:
                 address, data = entry.split(':')
                 self.write_data(int(address), int(data))
-        except:
-            print('Malformed data memory file. Terminating execution.')
+        except Exception as e:
+            print('Malformed data memory file. Terminating execution: {} - {}'.format(type(e), e))
             sys.exit(-1)
         print('Data memory initialized.')
 
@@ -190,12 +190,15 @@ class InstructionMemory:
         file_content = file_content.replace(' ;', ';')
         file_content = file_content.strip()
         file_content = file_content.replace(' ', ',')
-        file_content_list = file_content.split(';')
+        self.file_content_list = file_content.split(';')
         file_content = None
-        while '' in file_content_list:
-            file_content_list.remove('')
+
+    def read_register(self, register):
+        if register in self.registers:
+        while '' in self.file_content_list:
+            self.file_content_list.remove('')
         try:
-            for entry in file_content_list:
+            for entry in self.file_content_list:
                 address, instruction_string = entry.split(':')
                 instruction = instruction_string.split(',')
                 if len(instruction)<1 or len(instruction)>4:
@@ -299,9 +302,8 @@ class InstructionMemory:
                 self.print_instruction(address)
 
 
-
-current_cycle=0
-program_counter=0
+current_cycle = 0
+program_counter = 0
 
 registerFile = RegisterFile()
 dataMemory = DataMemory()
@@ -309,7 +311,7 @@ instructionMemory = InstructionMemory()
 
 print('\n---Start of simulation---')
 
-#####################################
+####################################
 ##      Write your code here      ##
 ####################################
 
