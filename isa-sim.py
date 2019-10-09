@@ -322,12 +322,32 @@ while current_cycle < max_cycles:
         rf.write_register(im.read_operand_1(pc), result)
     if current_opcode == "SUB":
         # rd = rs1 - rs2
+        rs1 = rf.read_register(im.read_operand_2(pc))
+        rs2 = rf.read_register(im.read_operand_3(pc))
+        #execute instruction
+        result = rs1 - rs2
+        # access memory (store)
+        rf.write_register(im.read_operand_1(pc), result)
         pass
+    if current_opcode == "AND":
+        # rd = rs1 & rs2
+        rs1 = rf.read_register(im.read_operand_2(pc))
+        rs2 = rf.read_register(im.read_operand_3(pc))
+        # execute instruction
+        result = rs1 & rs2
+        # access memory (store)
+        rf.write_register(im.read_operand_1(pc), result)
+    if current_opcode == "JR":
+
+        rs1 = rf.read_register(im.read_operand_2(pc))
+        inst= im(rs1)
 
 
-
-
-
+        # Jump to register R1
+        #Jump. This instruction jumps, in the execution of a program, to the
+        #instruction stored in the instruction memory at the address specified as content
+        #of the register R1. In other words, the program counter assumes the value of
+        #the register R1 content.
 
     pc += 1
     current_cycle += 1
