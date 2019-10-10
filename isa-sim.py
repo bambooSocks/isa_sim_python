@@ -337,17 +337,28 @@ while current_cycle < max_cycles:
         result = rs1 & rs2
         # access memory (store)
         rf.write_register(im.read_operand_1(pc), result)
+
+
+
+    #pc assumes the value of the register r1 content
+
     if current_opcode == "JR":
+        #read the address specified as content of the specific given register as operand 1
 
-        rs1 = rf.read_register(im.read_operand_2(pc))
-        inst= im(rs1)
+        pc = rf.read_register(im.read_operand_1(pc))
+        pc = pc - 1
+        print(pc)
 
-
-        # Jump to register R1
-        #Jump. This instruction jumps, in the execution of a program, to the
-        #instruction stored in the instruction memory at the address specified as content
-        #of the register R1. In other words, the program counter assumes the value of
-        #the register R1 content.
+    #read the address specified as content of the specific given register as operand 1 when cont of operand 2 == cont of operand 3
+    if current_opcode == "JEQ":
+        if rf.read_register(im.read_operand_2(pc)) == rf.read_register(im.read_operand_3(pc)):
+            pc = rf.read_register(im.read_operand_1(pc))
+        pc = pc -1
+    # read the address specified as content of the specific given register as operand 1 when cont of operand 2 < cont of operand 3
+    if current_opcode == "JLT":
+        if rf.read_register(im.read_operand_2(pc)) < rf.read_register(im.read_operand_3(pc)):
+            pc = rf.read_register(im.read_operand_1(pc))
+        pc = pc - 1
 
     pc += 1
     current_cycle += 1
