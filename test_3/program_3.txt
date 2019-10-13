@@ -1,0 +1,41 @@
+0: LD R1, R0;               # load A into R1
+1: LI R2, 3;                # load the memory address of D into R2
+2: LD R2, R2;               # load the D into R2
+3: LI R15, 6;               # set return address
+4: LI R10, 29;              # load the address of the procedure
+5: JR R10;                  # calling the multiplication procedure
+6: LI R2, 6;                # load data memory address into R2
+7: SD R1, R2;               # store A*D into data memory [6]
+8: LI R1, 1;                # load memory address of B
+9: LD R1, R1;               # load B into R1
+10: LI R2, 4;               # load memory address of E
+11: LD R2, R2;              # load E into R2
+12: LI R15, 14;             # set return address
+13: JR R10;                 # jump to multiplication procedure
+14: LI R2, 7;               # load data memory address into R2
+15: SD R1, R2;              # store B*E into data memory 7
+16: LI R1, 2;               # load memory address of C
+17: LD R1, R1;              # load C into R1
+18: LI R2, 5;               # load memory address of F
+19: LD R2, R2;              # load F into R2
+20: LI R15, 22;             # set return address (return 3)
+21: JR R10;                 # return multiplication procedure
+22: LI R2, 6;               # set R2 to address for A*D
+23: LD R2, R2;              # load A*D into R2
+24: ADD R1, R1, R2;         # R1 = (A*D) + (C*F)
+25: LI R2, 7;               # sets the address of B*E into R2
+26: LD R2, R2;              # loads B*E into R2
+27: ADD R1, R1, R2;         # R1 = R1 + (B*E)
+28: END;                    # terminate the program
+29: LI R13, 34;             # load the address of after the swap
+30: JLT R13, R2, R1;        # check if R2 is less then R1
+31: ADD R3, R0, R1;         # move R1 to R3
+32: ADD R1, R0, R2;         # move R2 to R1
+33: ADD R2, R0, R3;         # move R3 to R2
+34: LI R14, 37;             # load the address of the loop
+35: ADD R3, R0, R1;         # save the bigger factor in R4 (multiplicand)
+36: LI R4, 1;               # load 1 in R5
+37: SUB R2, R2, R4;         # subtract 1 from the R2
+38: JEQ R15, R2, R0;        # return if the counter is at 0
+39: ADD R1, R1, R3;         # add multiplicand to intermediate product
+40: JR R14;                 # repeat the loop
