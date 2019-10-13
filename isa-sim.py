@@ -347,14 +347,17 @@ while current_cycle < max_cycles:
         result = ~rs1
         rf.write_register(im.read_operand_1(pc), result)
     if current_opcode == "LI":
-        result = address
-        rf.write_register(im.read_operand_1(pc), result)
+        reg = im.write_register(im.read_operand_1(pc))
+        imm = int(im.read_operand_2(pc))
+        rf.write_register(reg, imm)
     if current_opcode == "LD":
-        result = dm.read_data(address)
-        rf.write_register(im.read_operand_1(pc), result)
+        adr = rf.read_register(im.read_operand_1(pc))
+        dat = rf.read_register(im.read_operand_2(pc))
+        dm.write_data(adr, dat)
     if current_opcode == "SD":
-        result = im.read_operand_1(pc)
-        dm.write_data(im.read_operand_2(pc), result)
+        dat = rf.read_register(im.read_operand_1(pc))
+        adr = rf.read_register(im.read_operand_2(pc))
+        dm.write_data(adr, dat)
 
     #pc assumes the value of the register r1 content
 
