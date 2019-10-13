@@ -308,6 +308,13 @@ im = InstructionMemory()
 print('\n---Start of simulation---')
 
 while current_cycle < max_cycles:
+
+    print("Cycle:", current_cycle)
+    im.print_instruction(pc)
+    dm.print_used()
+    rf.print_all()
+    print("\n\n\n")
+
     # fetch instruction
     # decode instruction
     current_opcode = im.read_opcode(pc)
@@ -379,6 +386,13 @@ while current_cycle < max_cycles:
     if current_opcode == "JLT":
         if rf.read_register(im.read_operand_2(pc)) < rf.read_register(im.read_operand_3(pc)):
             pc = rf.read_register(im.read_operand_1(pc)) - 1
+    if current_opcode == "NOP":
+        # don't do anything
+        pass
+    if current_opcode == "END":
+        # end the simulation
+        print('The program has terminated because the END instruction was reached')
+        break
 
     pc += 1
     current_cycle += 1
