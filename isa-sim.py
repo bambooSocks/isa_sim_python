@@ -337,7 +337,24 @@ while current_cycle < max_cycles:
         result = rs1 & rs2
         # access memory (store)
         rf.write_register(im.read_operand_1(pc), result)
-
+    if current_opcode == "OR":
+        rs1 = rf.read_register(im.read_operand_2(pc))
+        rs2 = rf.read_register(im.read_operand_3(pc))
+        result = rs1|rs2
+        rf.write_register(im.read_operand_1(pc), result)
+    if current_opcode == "NOT":
+        rs1 = rf.read_register(im.read_operand_2(pc))
+        result = ~rs1
+        rf.write_register(im.read_operand_1(pc), result)
+    if current_opcode == "LI":
+        result = address
+        rf.write_register(im.read_operand_1(pc), result)
+    if current_opcode == "LD":
+        result = dm.read_data(address)
+        rf.write_register(im.read_operand_1(pc), result)
+    if current_opcode == "SD":
+        result = im.read_operand_1(pc)
+        dm.write_data(im.read_operand_2(pc), result)
 
     #pc assumes the value of the register r1 content
 
