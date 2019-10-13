@@ -353,13 +353,14 @@ while current_cycle < max_cycles:
         # access memory (store)
         rf.write_register(im.read_operand_1(pc), result)
     if current_opcode == "LI":
-        reg = im.write_register(im.read_operand_1(pc))
+        reg = im.read_operand_1(pc)
         imm = int(im.read_operand_2(pc))
         rf.write_register(reg, imm)
     if current_opcode == "LD":
-        adr = rf.read_register(im.read_operand_1(pc))
-        dat = rf.read_register(im.read_operand_2(pc))
-        dm.write_data(adr, dat)
+        reg = im.read_operand_1(pc)
+        adr = rf.read_register(im.read_operand_2(pc))
+        val = dm.read_data(adr)
+        rf.write_register(reg, val)
     if current_opcode == "SD":
         dat = rf.read_register(im.read_operand_1(pc))
         adr = rf.read_register(im.read_operand_2(pc))
