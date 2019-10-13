@@ -324,7 +324,7 @@ while current_cycle < max_cycles:
         # rd = rs1 - rs2
         rs1 = rf.read_register(im.read_operand_2(pc))
         rs2 = rf.read_register(im.read_operand_3(pc))
-        #execute instruction
+        # execute instruction
         result = rs1 - rs2
         # access memory (store)
         rf.write_register(im.read_operand_1(pc), result)
@@ -339,26 +339,19 @@ while current_cycle < max_cycles:
         rf.write_register(im.read_operand_1(pc), result)
 
 
-
     #pc assumes the value of the register r1 content
 
     if current_opcode == "JR":
         #read the address specified as content of the specific given register as operand 1
-
-        pc = rf.read_register(im.read_operand_1(pc))
-        pc = pc - 1
-        print(pc)
-
+        pc = rf.read_register(im.read_operand_1(pc)) - 1
     #read the address specified as content of the specific given register as operand 1 when cont of operand 2 == cont of operand 3
     if current_opcode == "JEQ":
         if rf.read_register(im.read_operand_2(pc)) == rf.read_register(im.read_operand_3(pc)):
-            pc = rf.read_register(im.read_operand_1(pc))
-        pc = pc -1
+            pc = rf.read_register(im.read_operand_1(pc)) - 1
     # read the address specified as content of the specific given register as operand 1 when cont of operand 2 < cont of operand 3
     if current_opcode == "JLT":
         if rf.read_register(im.read_operand_2(pc)) < rf.read_register(im.read_operand_3(pc)):
-            pc = rf.read_register(im.read_operand_1(pc))
-        pc = pc - 1
+            pc = rf.read_register(im.read_operand_1(pc)) - 1
 
     pc += 1
     current_cycle += 1
