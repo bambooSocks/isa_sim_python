@@ -64,7 +64,7 @@ class RegisterFile:
     This method prints the content of the entire register file.
     '''
     def print_all(self):
-        print('Register file content:')
+        print('\033[32mRegister file content\033[0m:')
         for i in range(0, 16):
             self.print_register('R' + str(i))
 
@@ -153,7 +153,7 @@ class DataMemory:
     (initialized, read or written at least once).
     '''
     def print_used(self):
-        print('Data memory content (used locations only):')
+        print('\033[32mData memory content (used locations only)\033[0m:')
         for address in range(0, 256):
             if address in self.data_memory:
                 print('Address ' + str(address) + ' = ' + str(self.data_memory[address]))
@@ -309,11 +309,12 @@ print('\n---Start of simulation---')
 
 while current_cycle < max_cycles:
 
-    print("Cycle:", current_cycle)
+    print("\033[32mCycle\033[0m:", current_cycle)
+    print("\033[32mExecuted instruction\033[0m: ", end='')
     im.print_instruction(pc)
     dm.print_used()
     rf.print_all()
-    print("\n\n\n")
+    print("\n")
 
     # fetch instruction
     # decode instruction
@@ -360,41 +361,63 @@ while current_cycle < max_cycles:
         # access memory (store)
         rf.write_register(im.read_operand_1(pc), result)
     if current_opcode == "LI":
-        reg = im.read_operand_1(pc)
+        # rd = imm
+        # access memory (load)
+        rd = im.read_operand_1(pc)
         imm = int(im.read_operand_2(pc))
-        rf.write_register(reg, imm)
+        # access memory (store)
+        rf.write_register(rd, imm)
     if current_opcode == "LD":
-        reg = im.read_operand_1(pc)
-        adr = rf.read_register(im.read_operand_2(pc))
-        val = dm.read_data(adr)
-        rf.write_register(reg, val)
+        # rd = mem[addr]
+        # access memory (load)
+        rd = im.read_operand_1(pc)
+        addr = rf.read_register(im.read_operand_2(pc))
+        val = dm.read_data(addr)
+        # access memory (store)
+        rf.write_register(rd, val)
     if current_opcode == "SD":
-        dat = rf.read_register(im.read_operand_1(pc))
-        adr = rf.read_register(im.read_operand_2(pc))
-        dm.write_data(adr, dat)
-
+        # mem[addr] = rs
+        # access memory (load)
+        rs = rf.read_register(im.read_operand_1(pc))
+        addr = rf.read_register(im.read_operand_2(pc))
+        # access memory (store)
+        dm.write_data(addr, rs)
     if current_opcode == "JR":
-        # read the address specified as content of the specific given register as operand 1
-        pc = rf.read_register(im.read_operand_1(pc)) - 1
-    # read the address specified as content of the specific given register as operand 1
-    # when cont of operand 2 == cont of operand 3
+        # pc = rs
+        # access memory (load)
+        rs = rf.read_register(im.read_operand_1(pc))
+        # access memory (store)
+        pc = rs - 1
     if current_opcode == "JEQ":
-        if rf.read_register(im.read_operand_2(pc)) == rf.read_register(im.read_operand_3(pc)):
-            pc = rf.read_register(im.read_operand_1(pc)) - 1
-    # read the address specified as content of the specific given register as operand 1
-    # when cont of operand 2 < cont of operand 3
+        # if rs2 == rs3 then pc = rs2
+        # access memory (load)
+        rs1 = rf.read_register(im.read_operand_1(pc))
+        rs2 = rf.read_register(im.read_operand_2(pc))
+        rs3 = rf.read_register(im.read_operand_3(pc))
+        if rs2 == rs3:
+            # access memory (store)
+            pc = rs1 - 1
     if current_opcode == "JLT":
-        if rf.read_register(im.read_operand_2(pc)) < rf.read_register(im.read_operand_3(pc)):
-            pc = rf.read_register(im.read_operand_1(pc)) - 1
+        # if rs2 < rs3 then pc = rs2
+        # access memory (load)
+        rs1 = rf.read_register(im.read_operand_1(pc))
+        rs2 = rf.read_register(im.read_operand_2(pc))
+        rs3 = rf.read_register(im.read_operand_3(pc))
+        if rs2 == rs3:
+            # access memory (store)
+            pc = rs1 - 1
     if current_opcode == "NOP":
         # don't do anything
         pass
     if current_opcode == "END":
         # end the simulation
-        print('The program has terminated because the END instruction was reached')
+        print('\033[31mThe program has terminated because the END instruction was reached\033[0m')
         break
 
     pc += 1
     current_cycle += 1
+
+    if current_cycle == max_cycles:
+        print('\033[31mThe program has terminated because the cycle limit was reached\033[0m')
 
 print('\n---End of simulation---\n')
